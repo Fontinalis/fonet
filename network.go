@@ -29,7 +29,8 @@ func sigmoid(z float64) float64 {
 func sigmoidD(z float64) float64 {
 	return sigmoid(z) * (1 - sigmoid(z))
 }
-
+// NewNetwork is for creating a new network
+// with the defined layers.
 func NewNetwork(ls []int) (*Network, error) {
 	if len(ls) < 3 {
 		return nil, errors.New("Not enough layer in the layers description")
@@ -84,6 +85,8 @@ func (n *Network) a(l, j int) float64 {
 	return n.aFunc(n.z[l][j])
 }
 
+// Train is for training the network with the specified dataset,
+// epoch and learning rate
 func (n *Network) Train(trainingData [][][]float64, epochs int, lrate float64) {
 	for e := 0; e < epochs; e++ {
 		for _, xy := range trainingData {
@@ -156,6 +159,7 @@ func (n *Network) feedforward(a []float64) []float64 {
 	return a
 }
 
+// Predict calculates the output for the given input
 func (n *Network) Predict(input []float64) []float64 {
 	return n.feedforward(input)
 }
