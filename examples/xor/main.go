@@ -7,7 +7,7 @@ import (
 	"github.com/Fontinalis/fonet"
 )
 
-var samples [][][]float64 = [][][]float64{
+var samples = [][][]float64{
 	[][]float64{
 		[]float64{
 			0,

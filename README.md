@@ -44,7 +44,7 @@ n := fonet.NewNetwork([]int{6, 12, 8, 4})
 ### Train the network
 After creating the network, you have to train your network. To do that, you have to specify your training set, which should be like the next
 ```go
-var trainingData [][][]float64 = [][][]float64{
+var trainingData = [][][]float64{
     [][]float64{ // The actual training sample
         []float64{
             /*
