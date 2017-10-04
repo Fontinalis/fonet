@@ -1,4 +1,9 @@
 # fonet
+
+![cover.run go](https://cover.run/go/github.com/Fontinalis/fonet.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Fontinalis/fonet)](https://goreportcard.com/report/github.com/Fontinalis/fonet)
+[![GoDoc](https://godoc.org/github.com/Fontinalis/fonet?status.svg)](http://godoc.org/github.com/Fontinalis/fonet)
+
 `fonet` is a deep neural network package for Go. It's mainly created because I wanted to learn about neural networks and create my own package. I'm planning to continue the development of the package and add more function to it, for example exporting/importing a model.
 
 ## Install
