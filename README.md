@@ -61,10 +61,12 @@ var trainingData = [][][]float64{
 ```
 After giving the training data, you can set the epoch and the learning rate.
 ```go
-n.Train(trainingData, epoch, lrate)
-// Train(trainingData [][][]float64, epochs int, lrate float64)
+n.Train(trainingData, epoch, lrate, true)
+// Train(trainingData [][][]float64, epochs int, lrate float64, debug bool)
 ```
-
+`
+Note: When 'debug' is true, it'll show when and which epoch is finished
+`
 ### Predict the output
 After training your network, using the `Predict(..)` function you can calculate the output for the given input. 
 

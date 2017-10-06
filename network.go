@@ -89,15 +89,15 @@ func (n *Network) a(l, j int) float64 {
 
 // Train is for training the network with the specified dataset,
 // epoch and learning rate
+// The last bool parameter is for tracking where the training is. It'll log each epoch.
 func (n *Network) Train(trainingData [][][]float64, epochs int, lrate float64, debug bool) {
 	for e := 0; e < epochs; e++ {
-		if debug {
-			log.Println("Epoch:", e+1, "/", epochs)
-		}
 		for i, xy := range trainingData {
 			n.backpropagate(xy, lrate)
 		}
-
+		if debug {
+			log.Println("Epoch:", e+1, "/", epochs)
+		}
 	}
 }
 
