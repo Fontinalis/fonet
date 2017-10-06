@@ -51,7 +51,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	n.Train(samples, 100000, 1.001)
+	n.Train(samples, 100000, 1.001, false)
 	fmt.Println(n.Predict([]float64{0, 0}))
 	fmt.Println(n.Predict([]float64{0, 1}))
 	fmt.Println(n.Predict([]float64{1, 0}))
