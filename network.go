@@ -92,7 +92,7 @@ func (n *Network) a(l, j int) float64 {
 // The last bool parameter is for tracking where the training is. It'll log each epoch.
 func (n *Network) Train(trainingData [][][]float64, epochs int, lrate float64, debug bool) {
 	for e := 0; e < epochs; e++ {
-		for i, xy := range trainingData {
+		for _, xy := range trainingData {
 			n.backpropagate(xy, lrate)
 		}
 		if debug {
