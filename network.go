@@ -2,6 +2,7 @@ package fonet
 
 import (
 	"errors"
+	"log"
 	"math"
 	"math/rand"
 	"time"
@@ -29,6 +30,7 @@ func sigmoid(z float64) float64 {
 func sigmoidD(z float64) float64 {
 	return sigmoid(z) * (1 - sigmoid(z))
 }
+
 // NewNetwork is for creating a new network
 // with the defined layers.
 func NewNetwork(ls []int) (*Network, error) {
@@ -87,11 +89,15 @@ func (n *Network) a(l, j int) float64 {
 
 // Train is for training the network with the specified dataset,
 // epoch and learning rate
-func (n *Network) Train(trainingData [][][]float64, epochs int, lrate float64) {
+func (n *Network) Train(trainingData [][][]float64, epochs int, lrate float64, debug bool) {
 	for e := 0; e < epochs; e++ {
-		for _, xy := range trainingData {
+		if debug {
+			log.Println("Epoch:", e+1, "/", epochs)
+		}
+		for i, xy := range trainingData {
 			n.backpropagate(xy, lrate)
 		}
+
 	}
 }
 
