@@ -47,7 +47,7 @@ func TestNetwork(t *testing.T) {
 		t.FailNow()
 	}
 
-	n.Train(samples, 10000, 1.01)
+	n.Train(samples, 10000, 1.01, false)
 
 	a := n.Predict([]float64{0, 0})[0]
 	b := n.Predict([]float64{0, 1})[0]
