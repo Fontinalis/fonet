@@ -2,7 +2,7 @@ package fonet
 
 import "testing"
 
-var samples [][][]float64 = [][][]float64{
+var samples = [][][]float64{
 	[][]float64{
 		[]float64{
 			0,
