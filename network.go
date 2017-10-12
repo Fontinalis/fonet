@@ -12,6 +12,7 @@ func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
+// Network is containing all the needed settings/variables.
 type Network struct {
 	w      [][][]float64           // weights
 	b      [][]float64             // biases
