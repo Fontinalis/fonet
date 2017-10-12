@@ -3,39 +3,39 @@ package fonet
 import "testing"
 
 var samples = [][][]float64{
-	[][]float64{
-		[]float64{
+	{
+		{
 			0,
 			0,
 		},
-		[]float64{
+		{
 			0,
 		},
 	},
-	[][]float64{
-		[]float64{
+	{
+		{
 			0,
 			1,
 		},
-		[]float64{
+		{
 			1,
 		},
 	},
-	[][]float64{
-		[]float64{
+	{
+		{
 			1,
 			0,
 		},
-		[]float64{
+		{
 			1,
 		},
 	},
-	[][]float64{
-		[]float64{
+	{
+		{
 			1,
 			1,
 		},
-		[]float64{
+		{
 			0,
 		},
 	},
