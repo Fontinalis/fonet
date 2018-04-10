@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"math"
 	"os"
 
 	"github.com/gocarina/gocsv"
@@ -21,17 +22,21 @@ type IrisCase struct {
 }
 
 func main() {
-	n, err := fonet.NewNetwork([]int{4, 5, 3})
+	n, err := fonet.NewNetwork([]int{4, 5, 5, 3})
 	if err != nil {
 		log.Fatal(err)
 	}
 	samples := makeSamples("train.csv")
 	log.Println("Training started!")
-	n.Train(samples, 10000, 1.001, false)
+	n.Train(samples, 10000, 1.111, false)
 	log.Println("Training finished!")
 	tests := makeSamples("test.csv")
 	for _, t := range tests {
-		fmt.Printf("Predicted: %v, Expected: %v\n", n.Predict(t[0]), t[1])
+		fmt.Printf("Predicted: %v ->", n.Predict(t[0]))
+		for _, p := range n.Predict(t[0]) {
+			fmt.Printf(" %v", math.Round(p))
+		}
+		fmt.Printf(", Expected: %v\n", t[1])
 	}
 }
 
