@@ -1,7 +1,10 @@
 package fonet
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
+	"io"
 	"log"
 	"math"
 	"math/rand"
@@ -169,4 +172,47 @@ func (n *Network) feedforward(a []float64) []float64 {
 // Predict calculates the output for the given input
 func (n *Network) Predict(input []float64) []float64 {
 	return n.feedforward(input)
+}
+
+type exportedNet struct {
+	W  [][][]float64 // weights
+	B  [][]float64   // biases
+	D  [][]float64   // delta values for
+	Z  [][]float64   // z values in each layer
+	L  int           // Number of the layers
+	LS []int         // number of the neurons in each layer
+}
+
+func (n *Network) Export(w io.Writer) error {
+	bs, err := json.Marshal(exportedNet{
+		W:  n.w,
+		B:  n.b,
+		D:  n.d,
+		Z:  n.z,
+		L:  n.l,
+		LS: n.ls,
+	})
+	if err != nil {
+		return err
+	}
+	fmt.Fprint(w, string(bs))
+	return nil
+}
+
+func Load(bs []byte) (*Network, error) {
+	var en exportedNet
+	err := json.Unmarshal(bs, &en)
+	if err != nil {
+		return nil, err
+	}
+	return &Network{
+		w:      en.W,
+		b:      en.B,
+		d:      en.D,
+		z:      en.Z,
+		l:      en.L,
+		ls:     en.LS,
+		aFunc:  sigmoid,
+		daFunc: sigmoidD,
+	}, nil
 }
