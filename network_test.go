@@ -1,6 +1,7 @@
 package fonet
 
 import (
+	"bytes"
 	"math"
 	"testing"
 )
@@ -160,15 +161,37 @@ func TestNetwork(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t1 *testing.T) {
-			n, err := NewNetwork([]int{2, 3, 1}, tt.activationFunction)
+			// NewNetwork should error with too few layers
+			n, err := NewNetwork([]int{1}, tt.activationFunction)
+			if err != ErrNotEnoughLayers {
+				t1.Fatal("Expected error, but received no error")
+			}
+			n, err = NewNetwork([]int{3, 1}, tt.activationFunction)
+			if err != ErrNotEnoughLayers {
+				t1.Fatal("Expected error, but received no error")
+			}
+
+			n, err = NewNetwork([]int{2, 3, 1}, tt.activationFunction)
 			if err != nil {
 				t1.Fatalf("Could not create network: %+v", err)
 			}
 
-			n.Train(tt.samples, 10000, 1.01, false)
+			n.Train(tt.samples, 10000, 1.01, true)
+
+			// Export and re-load network to ensure those functions are tested.
+			var buf bytes.Buffer
+			if err := n.Export(&buf); err != nil {
+				t1.Fatalf("Unable to export network: %+v", err)
+			}
+			networkBytes := buf.Bytes()
+			// Using LoadFrom tests both the Load and LoadFrom functions.
+			nn, err := LoadFrom(networkBytes)
+			if err != nil {
+				t1.Fatalf("Could not load network: %+v", err)
+			}
 
 			for _, exp := range tt.results {
-				if res := n.Predict(exp[0])[0]; !percDiffLessThan(res, exp[1][0], 2) {
+				if res := nn.Predict(exp[0])[0]; !percDiffLessThan(res, exp[1][0], 2) {
 					t1.Errorf("Result is too different to be accurate; Using %s got: %.2f, expected: %.2f", tt.activationFunction, res, exp[1][0])
 				}
 			}
