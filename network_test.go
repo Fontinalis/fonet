@@ -2,6 +2,8 @@ package fonet
 
 import (
 	"bytes"
+	"io/ioutil"
+	"log"
 	"math"
 	"testing"
 )
@@ -85,6 +87,8 @@ var samples2 = [][][]float64{
 }
 
 func TestNetwork(t *testing.T) {
+	log.SetOutput(ioutil.Discard)
+
 	tests := []struct {
 		name               string
 		samples            [][][]float64
