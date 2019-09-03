@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"math"
 	"math/rand"
 	"time"
 )
@@ -27,25 +26,17 @@ type Network struct {
 	daFunc func(z float64) float64 // derivative of the aFunc
 }
 
-func sigmoid(z float64) float64 {
-	return 1. / (1. + math.Exp(-z))
-}
-
-func sigmoidD(z float64) float64 {
-	return sigmoid(z) * (1 - sigmoid(z))
-}
-
 // NewNetwork is for creating a new network
 // with the defined layers.
-func NewNetwork(ls []int) (*Network, error) {
+func NewNetwork(ls []int, activationFunc ActivationFunction) (*Network, error) {
 	if len(ls) < 3 {
 		return nil, errors.New("Not enough layer in the layers description")
 	}
 	n := Network{
 		l:      len(ls) - 1,
 		ls:     ls[1:],
-		aFunc:  sigmoid,
-		daFunc: sigmoidD,
+		aFunc:  functionPairs[activationFunc][0],
+		daFunc: functionPairs[activationFunc][1],
 	}
 
 	// init weights
