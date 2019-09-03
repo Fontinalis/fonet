@@ -41,17 +41,19 @@ type Network struct {
 	daFunc func(z float64) float64
 }
 
+type jsonNetwork struct {
+	W            [][][]float64 `json:"W"`
+	B            [][]float64   `json:"B"`
+	D            [][]float64   `json:"D"`
+	Z            [][]float64   `json:"Z"`
+	L            int           `json:"L"`
+	LS           []int         `json:"LS"`
+	ActivationID int           `json:"ActivationID"`
+}
+
 func (n *Network) MarshalJSON() ([]byte, error) {
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(struct {
-		W            [][][]float64 `json:"W"`
-		B            [][]float64   `json:"B"`
-		D            [][]float64   `json:"D"`
-		Z            [][]float64   `json:"Z"`
-		L            int           `json:"L"`
-		LS           []int         `json:"LS"`
-		ActivationID int           `json:"ActivationID"`
-	}{
+	err := json.NewEncoder(&buf).Encode(jsonNetwork{
 		W:            n.w,
 		B:            n.b,
 		D:            n.d,
@@ -68,16 +70,7 @@ func (n *Network) MarshalJSON() ([]byte, error) {
 }
 
 func (n *Network) UnmarshalJSON(data []byte) error {
-	var en struct {
-		W            [][][]float64 `json:"W"`
-		B            [][]float64   `json:"B"`
-		D            [][]float64   `json:"D"`
-		Z            [][]float64   `json:"Z"`
-		L            int           `json:"L"`
-		LS           []int         `json:"LS"`
-		ActivationID int           `json:"ActivationID"`
-	}
-
+	var en jsonNetwork
 	if err := json.Unmarshal(data, &en); err != nil {
 		return err
 	}
