@@ -1,12 +1,11 @@
 package fonet
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"log"
-	"math"
 	"math/rand"
 	"time"
 )
@@ -15,37 +14,92 @@ func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
+var (
+	// ErrNotEnoughLayers is returned when trying to create a new network with too few layers.
+	ErrNotEnoughLayers = errors.New("too few layers, minimum of 3 required")
+)
+
 // Network is containing all the needed settings/variables.
 type Network struct {
-	w      [][][]float64           // weights
-	b      [][]float64             // biases
-	d      [][]float64             // delta values for
-	z      [][]float64             // z values in each layer
-	l      int                     // Number of the layers
-	ls     []int                   // number of the neurons in each layer
-	aFunc  func(z float64) float64 // activation function
-	daFunc func(z float64) float64 // derivative of the aFunc
+	// w is the weights of the network.
+	w [][][]float64
+	// b is the biases of the network.
+	b [][]float64
+	// d is the delta values for each layer.
+	d [][]float64
+	// z is the z values for each layer.
+	z [][]float64
+	// l holds the number of layers in the network.
+	l int
+	// ls is the number of neurons in each layer.
+	ls []int
+	// activationID is the ID of the activation function used.  This is stored for serialization purposes.
+	activationID ActivationFunction
+	// aFunc is the activation function
+	aFunc func(z float64) float64
+	// daFunc is the derivative of the activation function.
+	daFunc func(z float64) float64
 }
 
-func sigmoid(z float64) float64 {
-	return 1. / (1. + math.Exp(-z))
+type jsonNetwork struct {
+	W            [][][]float64 `json:"W"`
+	B            [][]float64   `json:"B"`
+	D            [][]float64   `json:"D"`
+	Z            [][]float64   `json:"Z"`
+	L            int           `json:"L"`
+	LS           []int         `json:"LS"`
+	ActivationID int           `json:"ActivationID"`
 }
 
-func sigmoidD(z float64) float64 {
-	return sigmoid(z) * (1 - sigmoid(z))
-}
-
-// NewNetwork is for creating a new network
-// with the defined layers.
-func NewNetwork(ls []int) (*Network, error) {
-	if len(ls) < 3 {
-		return nil, errors.New("Not enough layer in the layers description")
+func (n *Network) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(jsonNetwork{
+		W:            n.w,
+		B:            n.b,
+		D:            n.d,
+		Z:            n.z,
+		L:            n.l,
+		LS:           n.ls,
+		ActivationID: int(n.activationID),
+	})
+	if err != nil {
+		return nil, err
 	}
+
+	return buf.Bytes(), nil
+}
+
+func (n *Network) UnmarshalJSON(data []byte) error {
+	var en jsonNetwork
+	if err := json.Unmarshal(data, &en); err != nil {
+		return err
+	}
+
+	n.w = en.W
+	n.b = en.B
+	n.d = en.D
+	n.z = en.Z
+	n.l = en.L
+	n.ls = en.LS
+	n.activationID = ActivationFunction(en.ActivationID)
+	n.aFunc = functionPairs[n.activationID][0]
+	n.daFunc = functionPairs[n.activationID][1]
+
+	return nil
+}
+
+// NewNetwork is for creating a new network with the defined layers.
+func NewNetwork(ls []int, activationFunc ActivationFunction) (*Network, error) {
+	if len(ls) < 3 {
+		return nil, ErrNotEnoughLayers
+	}
+
 	n := Network{
-		l:      len(ls) - 1,
-		ls:     ls[1:],
-		aFunc:  sigmoid,
-		daFunc: sigmoidD,
+		l:            len(ls) - 1,
+		ls:           ls[1:],
+		activationID: activationFunc,
+		aFunc:        functionPairs[activationFunc][0],
+		daFunc:       functionPairs[activationFunc][1],
 	}
 
 	// init weights
@@ -91,9 +145,8 @@ func (n *Network) a(l, j int) float64 {
 	return n.aFunc(n.z[l][j])
 }
 
-// Train is for training the network with the specified dataset,
-// epoch and learning rate
-// The last bool parameter is for tracking where the training is. It'll log each epoch.
+// Train is for training the network with the specified dataset, epoch and learning rate. The last bool parameter is for
+// tracking where the training is. It'll log each epoch.
 func (n *Network) Train(trainingData [][][]float64, epochs int, lrate float64, debug bool) {
 	for e := 0; e < epochs; e++ {
 		for _, xy := range trainingData {
@@ -108,7 +161,8 @@ func (n *Network) Train(trainingData [][][]float64, epochs int, lrate float64, d
 func (n *Network) backpropagate(xy [][]float64, eta float64) {
 	x := xy[0]
 	y := xy[1]
-	_ = n.feedforward(x) // define z values
+	// define z values
+	_ = n.feedforward(x)
 
 	// define the output deltas
 	for j := 0; j < len(n.d[len(n.d)-1]); j++ {
@@ -144,7 +198,7 @@ func (n *Network) backpropagate(xy [][]float64, eta float64) {
 	}
 }
 
-// use only in the backpropagation! othervise it can return wrong value
+// delta should only use in the back-propagation, otherwise it can return wrong value.
 func (n *Network) delta(l, j int) float64 {
 	var d float64
 	for k := 0; k < n.ls[l+1]; k++ {
@@ -169,50 +223,28 @@ func (n *Network) feedforward(a []float64) []float64 {
 	return a
 }
 
-// Predict calculates the output for the given input
+// Predict calculates the output for the given input.
 func (n *Network) Predict(input []float64) []float64 {
 	return n.feedforward(input)
 }
 
-type exportedNet struct {
-	W  [][][]float64 // weights
-	B  [][]float64   // biases
-	D  [][]float64   // delta values for
-	Z  [][]float64   // z values in each layer
-	L  int           // Number of the layers
-	LS []int         // number of the neurons in each layer
-}
-
+// Export will serialize the network, and write it to the provided writer.
 func (n *Network) Export(w io.Writer) error {
-	bs, err := json.Marshal(exportedNet{
-		W:  n.w,
-		B:  n.b,
-		D:  n.d,
-		Z:  n.z,
-		L:  n.l,
-		LS: n.ls,
-	})
-	if err != nil {
-		return err
-	}
-	fmt.Fprint(w, string(bs))
-	return nil
+	return json.NewEncoder(w).Encode(n)
 }
 
-func Load(bs []byte) (*Network, error) {
-	var en exportedNet
-	err := json.Unmarshal(bs, &en)
-	if err != nil {
+// LoadFrom will load a network from the provided reader.
+func Load(r io.Reader) (*Network, error) {
+	var n Network
+	if err := json.NewDecoder(r).Decode(&n); err != nil {
 		return nil, err
 	}
-	return &Network{
-		w:      en.W,
-		b:      en.B,
-		d:      en.D,
-		z:      en.Z,
-		l:      en.L,
-		ls:     en.LS,
-		aFunc:  sigmoid,
-		daFunc: sigmoidD,
-	}, nil
+
+	return &n, nil
+}
+
+// LoadFrom will load a network from the provided byte slice.
+func LoadFrom(bs []byte) (*Network, error) {
+	buf := bytes.NewBuffer(bs)
+	return Load(buf)
 }

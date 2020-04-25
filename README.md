@@ -1,7 +1,6 @@
 # fonet
 
 [![Build Status](https://travis-ci.org/Fontinalis/fonet.svg?branch=master)](https://travis-ci.org/Fontinalis/fonet)
-![cover.run go](https://cover.run/go/github.com/Fontinalis/fonet.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Fontinalis/fonet)](https://goreportcard.com/report/github.com/Fontinalis/fonet)
 [![GoDoc](https://godoc.org/github.com/Fontinalis/fonet?status.svg)](http://godoc.org/github.com/Fontinalis/fonet)
 
