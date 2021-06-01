@@ -46,8 +46,12 @@ func makeSamples(path string) [][][]float64 {
 	if err != nil {
 		panic(err)
 	}
+
 	var cases []IrisCase
-	err = gocsv.Unmarshal(f, &cases)
+	if err := gocsv.Unmarshal(f, &cases); err != nil {
+		panic(err)
+	}
+
 	var out [][][]float64
 	for _, c := range cases {
 		out = append(out, [][]float64{
