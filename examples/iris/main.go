@@ -11,6 +11,7 @@ import (
 	"github.com/Fontinalis/fonet"
 )
 
+// IrisCase is used to export the results of the exercise to a CSV file.
 type IrisCase struct {
 	SepalLength float64 `csv:"sepal_length"`
 	SepalWidth  float64 `csv:"sepal_width"`
@@ -22,7 +23,7 @@ type IrisCase struct {
 }
 
 func main() {
-	n, err := fonet.NewNetwork([]int{4, 5, 5, 3})
+	n, err := fonet.NewNetwork([]int{4, 5, 5, 3}, fonet.Sigmond)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -45,18 +46,22 @@ func makeSamples(path string) [][][]float64 {
 	if err != nil {
 		panic(err)
 	}
+
 	var cases []IrisCase
-	err = gocsv.Unmarshal(f, &cases)
+	if err := gocsv.Unmarshal(f, &cases); err != nil {
+		panic(err)
+	}
+
 	var out [][][]float64
 	for _, c := range cases {
 		out = append(out, [][]float64{
-			[]float64{
+			{
 				c.SepalLength,
 				c.SepalWidth,
 				c.PetalLength,
 				c.PetalWidth,
 			},
-			[]float64{
+			{
 				c.Setosa,
 				c.Virginica,
 				c.Versicolor,

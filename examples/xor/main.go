@@ -47,7 +47,7 @@ var samples = [][][]float64{
 }
 
 func main() {
-	n, err := fonet.NewNetwork([]int{2, 3, 1})
+	n, err := fonet.NewNetwork([]int{2, 3, 1}, fonet.Sigmond)
 	if err != nil {
 		log.Fatal(err)
 	}

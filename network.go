@@ -51,6 +51,7 @@ type jsonNetwork struct {
 	ActivationID int           `json:"ActivationID"`
 }
 
+// MarshalJSON implements the Marshaler interface for JSON encoding.
 func (n *Network) MarshalJSON() ([]byte, error) {
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(jsonNetwork{
@@ -69,6 +70,7 @@ func (n *Network) MarshalJSON() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
+// UnmarshalJSON implements the Unmarshaler interface for JSON encoding.
 func (n *Network) UnmarshalJSON(data []byte) error {
 	var en jsonNetwork
 	if err := json.Unmarshal(data, &en); err != nil {
@@ -233,7 +235,7 @@ func (n *Network) Export(w io.Writer) error {
 	return json.NewEncoder(w).Encode(n)
 }
 
-// LoadFrom will load a network from the provided reader.
+// Load will load a network from the provided reader.
 func Load(r io.Reader) (*Network, error) {
 	var n Network
 	if err := json.NewDecoder(r).Decode(&n); err != nil {

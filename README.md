@@ -21,7 +21,7 @@ I focused (and still focusing) on creating an easy to use package, but let me kn
 As in the `xor` example, it's not so complicated to create a network.
 When you creating the network, you always have to define the layers.
 ```go
-n := fonet.NewNetwork([]int{2, 3, 1})
+n := fonet.NewNetwork([]int{2, 3, 1}, fonet.Sigmond)
 /*
 2 nodes in the INPUT LAYER
 3 nodes in the HIDDEN LAYER
@@ -30,7 +30,7 @@ n := fonet.NewNetwork([]int{2, 3, 1})
 ```
 But my goal was also to create a package, which can create deep neural networks too, so here is another example for that.
 ```go
-n := fonet.NewNetwork([]int{6, 12, 8, 4})
+n := fonet.NewNetwork([]int{6, 12, 8, 4}, fonet.Sigmond)
 /*
 6 nodes in the INPUT LAYER
 12 nodes in the HIDDEN LAYER (1)
