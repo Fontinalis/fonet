@@ -22,7 +22,7 @@ type IrisCase struct {
 }
 
 func main() {
-	n, err := fonet.NewNetwork([]int{4, 5, 5, 3})
+	n, err := fonet.NewNetwork([]int{4, 5, 5, 3}, fonet.Sigmond)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -50,13 +50,13 @@ func makeSamples(path string) [][][]float64 {
 	var out [][][]float64
 	for _, c := range cases {
 		out = append(out, [][]float64{
-			[]float64{
+			{
 				c.SepalLength,
 				c.SepalWidth,
 				c.PetalLength,
 				c.PetalWidth,
 			},
-			[]float64{
+			{
 				c.Setosa,
 				c.Virginica,
 				c.Versicolor,
