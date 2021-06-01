@@ -22,7 +22,7 @@ var (
 	}
 )
 
-// The type of function to use for the neural network.
+// ActivationFunction is the type of function to use for the neural network.
 type ActivationFunction int
 
 func (a ActivationFunction) String() string {

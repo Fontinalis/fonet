@@ -11,6 +11,7 @@ import (
 	"github.com/Fontinalis/fonet"
 )
 
+// IrisCase is used to export the results of the exercise to a CSV file.
 type IrisCase struct {
 	SepalLength float64 `csv:"sepal_length"`
 	SepalWidth  float64 `csv:"sepal_width"`
