@@ -1,8 +1,9 @@
 # fonet
 
-[![Build Status](https://travis-ci.org/Fontinalis/fonet.svg?branch=master)](https://travis-ci.org/Fontinalis/fonet)
+[![Go](https://github.com/Fontinalis/fonet/actions/workflows/go.yml/badge.svg?branch=master)](https://github.com/Fontinalis/fonet/actions/workflows/go.yml)
+[![Coverage Status](https://coveralls.io/repos/github/Fontinalis/fonet/badge.svg?branch=master)](https://coveralls.io/github/Fontinalis/fonet?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Fontinalis/fonet)](https://goreportcard.com/report/github.com/Fontinalis/fonet)
-[![GoDoc](https://godoc.org/github.com/Fontinalis/fonet?status.svg)](http://godoc.org/github.com/Fontinalis/fonet)
+[![Go Reference](https://pkg.go.dev/badge/github.com/Fontinalis/fonet.svg)](https://pkg.go.dev/github.com/Fontinalis/fonet)
 
 `fonet` is a deep neural network package for Go. It's mainly created because I wanted to learn about neural networks and create my own package. I'm planning to continue the development of the package and add more function to it, for example exporting/importing a model.
 

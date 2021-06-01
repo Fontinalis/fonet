@@ -1,0 +1,4 @@
+github.com/Fontinalis/fonet v0.0.0-20210601082414-1fd7135158c9 h1:ctQfY8jQO93HXYIwPARnSQggjrZdNOB1TI6hn5K3mYU=
+github.com/Fontinalis/fonet v0.0.0-20210601082414-1fd7135158c9/go.mod h1:kW1TZAvBGU81UsyTc4/OvXS6rLIeI3OrnxSuKQprKbo=
+github.com/gocarina/gocsv v0.0.0-20210516172204-ca9e8a8ddea8 h1:hp1oqdzmv37vPLYFGjuM/RmUgUMfD9vQfMszc54l55Y=
+github.com/gocarina/gocsv v0.0.0-20210516172204-ca9e8a8ddea8/go.mod h1:5YoVOkjYAQumqlV356Hj3xeYh4BdZuLE0/nRkf2NKkI=
